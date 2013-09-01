@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="floodfire-MySQL-JPA">
+		<class>edu.nccu.floodfire.entity.User</class>
+		<class>edu.nccu.floodfire.entity.Event</class>
+		<class>edu.nccu.floodfire.entity.Job</class>
+		<class>edu.nccu.floodfire.entity.Token</class>
+		<properties>
+			<property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/manageent" />
+			<property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver" />
+			<property name="openjpa.ConnectionUserName" value="root" />
+			<property name="openjpa.ConnectionPassword" value="4688" />
+			<property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO" />
+			<property name="openjpa.DynamicEnhancementAgent" value="false" />
+			<property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
+		</properties>
+	</persistence-unit>
+
+	<persistence-unit name="floodfire-MySQL-JPA-TweetData">
+		<class>edu.nccu.floodfire.entity.Tweets</class>
+		<class>edu.nccu.floodfire.entity.Users</class>
+		<properties>
+			<property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/tweetData" />
+			<property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver" />
+			<property name="openjpa.ConnectionUserName" value="root" />
+			<property name="openjpa.ConnectionPassword" value="4688" />
+			<property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO" />
+			<property name="openjpa.DynamicEnhancementAgent" value="false" />
+			<property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
+			<property name="openjpa.jdbc.MappingDefaults"    value="ForeignKeyDeleteAction=restrict, JoinForeignKeyDeleteAction=restrict"/>
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="floodfire-MySQL-JPA-yourtwapperkeeper">
+		<class>edu.nccu.floodfire.entity.Archive</class>
+		<class>edu.nccu.floodfire.entity.Process</class>
+		<class>edu.nccu.floodfire.entity.Rawstream</class>
+		<properties>
+			<property name="openjpa.ConnectionURL" value="jdbc:mysql://localhost:3306/yourtwapperkeeper" />
+			<property name="openjpa.ConnectionDriverName" value="com.mysql.jdbc.Driver" />
+			<property name="openjpa.ConnectionUserName" value="root" />
+			<property name="openjpa.ConnectionPassword" value="4688" />
+			<property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO" />
+			<property name="openjpa.DynamicEnhancementAgent" value="false" />
+			<property name="openjpa.RuntimeUnenhancedClasses" value="supported" />
+			<property name="openjpa.jdbc.MappingDefaults"    value="ForeignKeyDeleteAction=restrict, JoinForeignKeyDeleteAction=restrict"/>
+		</properties>
+	</persistence-unit>
+</persistence>

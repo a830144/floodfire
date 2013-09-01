@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+
+    http://www.springframework.org/schema/beans/spring-beans.xsd  
+    
+    http://www.springframework.org/schema/aop  
+
+    http://www.springframework.org/schema/aop/spring-aop.xsd  
+  
+    http://www.springframework.org/schema/tx  
+
+    http://www.springframework.org/schema/tx/spring-tx.xsd  
+
+    http://www.springframework.org/schema/context  
+
+    http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="twitterDataService" class="edu.nccu.floodfire.service.impl.TwitterDataServiceImpl">
+		<property name="twitterSearchRec" ref="twitterSearchRec" />
+		<property name="twitterStreamRec" ref="twitterStreamRec" />
+	</bean>
+	<bean id="twitterSearchRec" class="edu.nccu.floodfire.util.TwitterSearchRec">
+		<property name="noSQLTwitterStatusService" ref="hbaseTwitterStatusService" />
+		<property name="mySQLTwitterStatusService" ref="mySqlTwitterStatusService" />
+	</bean>
+	<bean id="twitterStreamRec" class="edu.nccu.floodfire.util.TwitterStreamRec">
+		<property name="noSQLTwitterStatusService" ref="hbaseTwitterStatusService" />
+		<property name="mySQLTwitterStatusService" ref="mySqlTwitterStatusService" />
+	</bean>
+
+	<bean id="cassandraTwitterStatusService"
+		class="edu.nccu.floodfire.service.impl.CassandraTwitterStatusServiceImpl">
+	</bean>
+	
+	<bean id="hbaseTwitterStatusService"
+		class="edu.nccu.floodfire.service.impl.HBaseTwitterStatusServiceImpl">
+	</bean>
+	
+	<bean id="flumeTwitterStatusService"
+		class="edu.nccu.floodfire.service.impl.FlumeTwitterStatusServiceImpl">
+		<property name="store" ref="store" />
+	</bean>
+	
+	<bean id="mySqlTwitterStatusService"
+		class="edu.nccu.floodfire.service.impl.MySQLTwitterStatusServiceImpl">
+		<property name="twitterDao" ref="twitterDao" /> 
+	</bean>
+	
+	<bean id="managementService"
+		class="edu.nccu.floodfire.service.impl.ManagementServiceImpl">
+		<property name="userDao" ref="UserDao" />
+		<property name="jobDao" ref="JobDao" />
+		<property name="eventDao" ref="EventDao" />
+		<property name="tokenDao" ref="TokenDao" />
+	</bean>
+	
+	<bean id="analyzeService"
+		class="edu.nccu.floodfire.service.impl.AnalyzeServiceImpl">
+		<property name="twitterDao" ref="twitterDao" /> 
+	</bean>
+	
+	<bean id="syncDataService"
+		class="edu.nccu.floodfire.service.impl.SyncDataServiceImpl">
+		<property name="twitterDao" ref="twitterDao" /> 
+		<property name="yourtwapperkeeperDao" ref="yourtwapperkeeperDao" />
+		<property name="hBaseTwitterStatusService" ref="hbaseTwitterStatusService" />
+	</bean>
+	
+	<bean id="store"
+		class="edu.nccu.floodfire.flume.Store">
+	</bean>
+
+    <bean id="UserDao" class="edu.nccu.floodfire.dao.impl.UserDaoImpl">
+		<property name="entityManagerFactory" ref="entityManagerFactory_manageent" />
+	</bean>
+	
+	<bean id="JobDao" class="edu.nccu.floodfire.dao.impl.JobDaoImpl">
+		<property name="entityManagerFactory" ref="entityManagerFactory_manageent" />
+	</bean>
+	
+	<bean id="EventDao" class="edu.nccu.floodfire.dao.impl.EventDaoImpl">
+		<property name="entityManagerFactory" ref="entityManagerFactory_manageent" />
+	</bean>
+	
+	<bean id="TokenDao" class="edu.nccu.floodfire.dao.impl.TokenDaoImpl">
+		<property name="entityManagerFactory" ref="entityManagerFactory_manageent" />
+	</bean>
+
+	<bean id="twitterDao" class="edu.nccu.floodfire.dao.impl.TwitterDaoImpl">
+		<property name="entityManagerFactory" ref="entityManagerFactory_tweetData" />
+		<property name="datasource" ref="dataSource_tweetData" />
+	</bean>	
+	
+	<bean id="yourtwapperkeeperDao" class="edu.nccu.floodfire.dao.impl.YourtwapperkeeperDaoImpl">
+		<property name="entityManagerFactory" ref="entityManagerFactory_yourtwapperkeeper" />
+	</bean>			
+
+	<bean id="entityManagerFactory_manageent"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="floodfire-MySQL-JPA"/>
+		<property name="dataSource" ref="dataSource_manageent" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
+				<property name="showSql" value="true" />
+				<property name="generateDdl" value="true" />
+				<property name="databasePlatform"
+					value="org.apache.openjpa.jdbc.sql.MySQLDictionary" />
+			</bean>
+		</property>
+		<property name="loadTimeWeaver">
+			<bean
+				class="org.springframework.instrument.classloading.SimpleLoadTimeWeaver" />
+		</property>
+	</bean>
+	
+	<bean id="entityManagerFactory_tweetData"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="floodfire-MySQL-JPA-TweetData"/>
+		<property name="dataSource" ref="dataSource_tweetData" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
+				<property name="showSql" value="true" />
+				<property name="generateDdl" value="true" />
+				<property name="databasePlatform"
+					value="org.apache.openjpa.jdbc.sql.MySQLDictionary" />
+			</bean>
+		</property>
+		<property name="loadTimeWeaver">
+			<bean
+				class="org.springframework.instrument.classloading.SimpleLoadTimeWeaver" />
+		</property>
+	</bean>
+	
+	<bean id="entityManagerFactory_yourtwapperkeeper"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="floodfire-MySQL-JPA-yourtwapperkeeper"/>
+		<property name="dataSource" ref="dataSource_yourtwapperkeeper" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.OpenJpaVendorAdapter">
+				<property name="showSql" value="true" />
+				<property name="generateDdl" value="true" />
+				<property name="databasePlatform"
+					value="org.apache.openjpa.jdbc.sql.MySQLDictionary" />
+			</bean>
+		</property>
+		<property name="loadTimeWeaver">
+			<bean
+				class="org.springframework.instrument.classloading.SimpleLoadTimeWeaver" />
+		</property>
+	</bean>
+
+	<bean id="dataSource_manageent" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close"  lazy-init="false">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://192.168.83.130:3306/manageent" />
+		<property name="user" value="root" />
+		<property name="password" value="4688" />
+		<property name="initialPoolSize" value="10"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="minPoolSize" value="10"/>
+	</bean>
+	<bean id="jdbcTemplate_manageent" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg index="0" ref="dataSource_manageent"/>
+        <constructor-arg index="1" value="false"/>
+    </bean>
+	
+	<bean id="dataSource_tweetData" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close" lazy-init="false">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://192.168.83.130:3306/tweetData" />
+		<property name="user" value="root" />
+		<property name="password" value="4688" />
+		<property name="initialPoolSize" value="10"/>
+        <property name="maxPoolSize" value="30"/>
+        <property name="minPoolSize" value="10"/>
+	</bean>
+	<bean id="jdbcTemplate_tweetData" class="org.springframework.jdbc.core.JdbcTemplate">
+        <constructor-arg index="0" ref="dataSource_tweetData"/>
+        <constructor-arg index="1" value="false"/>
+    </bean>
+	
+	<bean id="dataSource_yourtwapperkeeper" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="com.mysql.jdbc.Driver" />
+		<property name="jdbcUrl" value="jdbc:mysql://192.168.83.130:3306/yourtwapperkeeper" />
+		<property name="user" value="root" />
+		<property name="password" value="4688" />		
+	</bean>
+
+	<bean id="transactionManager_manageent" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory_manageent" />
+	</bean>
+	<bean id="transactionManager_tweetData" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory_tweetData" />
+	</bean>
+	<bean id="transactionManager_yourtwapperkeeper" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory_yourtwapperkeeper" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager_manageent" />
+    <tx:annotation-driven transaction-manager="transactionManager_tweetData" />
+    <tx:annotation-driven transaction-manager="transactionManager_yourtwapperkeeper" />
+
+
+
+
+
+</beans>
+
